@@ -1,0 +1,19 @@
+verilated_fst_c.o: \
+ /home/dcc3637/tools/verilator/include/verilated_fst_c.cpp \
+ /home/dcc3637/tools/verilator/include/verilated.h \
+ /home/dcc3637/tools/verilator/include/verilated_config.h \
+ /home/dcc3637/tools/verilator/include/verilatedos.h \
+ /home/dcc3637/tools/verilator/include/verilated_types.h \
+ /home/dcc3637/tools/verilator/include/verilated_funcs.h \
+ /home/dcc3637/tools/verilator/include/verilated_fst_c.h \
+ /home/dcc3637/tools/verilator/include/verilated_trace.h \
+ /home/dcc3637/tools/verilator/include/gtkwave/fastlz.c \
+ /home/dcc3637/tools/verilator/include/gtkwave/fastlz.h \
+ /home/dcc3637/tools/verilator/include/gtkwave/fastlz.c \
+ /home/dcc3637/tools/verilator/include/gtkwave/fstapi.c \
+ /home/dcc3637/tools/verilator/include/gtkwave/fstapi.h \
+ /home/dcc3637/tools/verilator/include/gtkwave/lz4.h \
+ /home/dcc3637/tools/verilator/include/gtkwave/lz4.c \
+ /home/dcc3637/tools/verilator/include/verilated_trace_imp.h \
+ /home/dcc3637/tools/verilator/include/verilated_intrinsics.h \
+ /home/dcc3637/tools/verilator/include/verilated_threads.h
