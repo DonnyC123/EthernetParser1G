@@ -1,0 +1,40 @@
+module data_pipeline # (
+  parameter int DATA_W      = 32,
+  parameter int PIPE_DEPTH  = 2,
+  parameter bit RESET_EN    = 1,
+  parameter int RESET_VALUE = 0
+) (
+  input  logic clk,
+  input  logic rst,
+  input  logic [DATA_W-1:0] data_i,
+  output logic [DATA_W-1:0] data_o
+);
+
+  logic [DATA_W-1:0] data_shift_reg_ff [PIPE_DEPTH];
+
+  generate
+    if (PIPE_DEPTH >= 1) begin
+      always_ff @(posedge clk) begin
+        if (rst && RESET_EN) begin
+
+          for (int i = 0; i < PIPE_DEPTH; i++) begin
+            data_shift_reg_ff[i]  <= RESET_VALUE;
+          end
+        end else begin
+
+          data_shift_reg_ff[0]    <= data_i;
+          for (int i = 1; i < PIPE_DEPTH; i++) begin
+            data_shift_reg_ff[i]  <= data_shift_reg_ff[i-1];
+          end
+        end
+      end
+
+      assign data_o = data_shift_reg_ff[PIPE_DEPTH-1]; 
+    end else begin
+      assign data_o = data_i;
+    end 
+
+  endgenerate
+
+  
+endmodule
