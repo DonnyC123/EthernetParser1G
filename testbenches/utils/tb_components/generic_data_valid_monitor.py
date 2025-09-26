@@ -14,4 +14,5 @@ class GenericDataValidMonitor(GenericMonitor[OutputInterfaceType]):
     while True:
       output_transaction = await self.receive_transaction()
       if output_transaction.valid: 
+        print("adding data")
         await self.actual_queue.put(output_transaction)

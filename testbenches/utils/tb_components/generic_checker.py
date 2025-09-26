@@ -18,9 +18,9 @@ class GenericChecker():
       model_out = expected_queue.get()
       
       if monitor_out != model_out:
-        msg = (f"Mismatch in model and monitor outpus: "
-          f"model output={model_out}, "
-          f"monitor output={monitor_out}")
+        msg = f""""Mismatch in model and monitor outputs:
+          model output={model_out}, 
+          monitor output={monitor_out}"""
         if self.fatal:
           raise RuntimeError(msg)
         else:

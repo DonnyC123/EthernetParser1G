@@ -45,8 +45,5 @@ async def sanity_test(dut):
   
   await Timer(1000, units="ns")
   sim_time_ns = get_sim_time(units="ns")
-  # rx_mac_scoreboard.check()
+  await rx_mac_scoreboard.check()
   dut._log.info(f"Extended test completed at simulation time {sim_time_ns} ns")
-  
-  
-  

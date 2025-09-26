@@ -40,12 +40,10 @@ class GenericDdrValidDriver(GenericDriver[InputInterfaceType]):
         
         random_stimulus = self.generate_random_stimulus()
         random_stimulus.valid = 0
-        print("Making Random", random_stimulus)
         await self.drive_transaction(random_stimulus)
         await RisingEdge(self.dut.clk)
         
         random_stimulus = self.generate_random_stimulus()
-        print("Making Random", random_stimulus)
         await self.drive_transaction(random_stimulus)
         await FallingEdge(self.dut.clk)
       

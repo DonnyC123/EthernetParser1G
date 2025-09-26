@@ -16,6 +16,7 @@ class GenericMonitor(Generic[OutputInterfaceType]):
     
   async def monitor_loop(self):
     while True:
+      print("parent loop")
       output_transaction = await self.receive_transaction()
       await self.actual_queue.put(output_transaction)
   

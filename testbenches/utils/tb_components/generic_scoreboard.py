@@ -10,6 +10,6 @@ class GenericScoreboard():
   def notify(self, notification):
     self.model.notify(notification)
   
-  def check(self):
-    self.checker.check(self.model.expected_queue, self.monitor.actual_queue)
+  async def check(self):
+    await self.checker.check(self.model.expected_queue, self.monitor.actual_queue)
     
