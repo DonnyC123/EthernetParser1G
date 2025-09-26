@@ -5,8 +5,8 @@ from testbenches.utils.packet_lib.ether_type import EtherType
 
 class EthernetFrame:
   def __init__(self,
-    dst_mac: str = "000000000000", 
     src_mac: str = "ffffffffffff",
+    dst_mac: str = "000000000000", 
     ethertype: EtherType = EtherType.IPV4,
     payload: bytes = b"",  
     ):

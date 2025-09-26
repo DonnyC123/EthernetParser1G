@@ -2,6 +2,7 @@ PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 SIM = verilator
 TOPLEVEL_LANG = verilog
+VERILATOR_FLAGS += --build-dep-bin
 
 # Require TEST_PATH to be explicitly set - no default
 ifndef TEST_PATH

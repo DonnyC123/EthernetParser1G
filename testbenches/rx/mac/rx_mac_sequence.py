@@ -11,10 +11,24 @@ InputInterfaceType = TypeVar("InputInterfaceType")
 class RxMacSequence(GenericSequence[InputInterfaceType]):
   MIN_FRAME_GAP = 96//4
   
+  def __init__(self, driver, *subscribers):
+    super().__init__(driver)
+    self.ethernet_frame_subscribers = list(subscribers)
+          
+  async def add_subscriber(self, *subscribers):
+    self.ethernet_frame_subscribers.extend(subscribers)
+    
+  async def notify_subscribers(self, ethernet_frame):
+    for sub in self.ethernet_frame_subscribers:
+      if hasattr(sub, 'notify'):
+        sub.notify(ethernet_frame)
+  
   async def add_ethernet_frame(self, ethernet_frame : EthernetFrame, additional_frame_gap : int = 0):
+    await self.notify_subscribers(ethernet_frame)
     for byte in ethernet_frame.pack():
       rising_data = ((byte >> 4) & 0xF)
       falling_data = byte & 0xF
+      
       await self.add_transaction((
         RxMacInputInterface.with_valid(rgmii_rx_data_i=rising_data, valid=1),
         RxMacInputInterface.with_error(rgmii_rx_data_i=falling_data, error=0)

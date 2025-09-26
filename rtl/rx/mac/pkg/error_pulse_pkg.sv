@@ -1,4 +1,4 @@
-package invalidate_packet_pkg;
+package error_pulse_pkg;
 
   typedef enum logic {  
     NO_ERROR,

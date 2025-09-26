@@ -1,3 +1,4 @@
+from cocotb import start_soon
 from cocotb.triggers import RisingEdge
 from cocotb.queue import Queue
 from dataclasses import fields, is_dataclass
@@ -9,17 +10,19 @@ class GenericDriver(Generic[InputInterfaceType]):
   def __init__(self, dut):
     self.dut = dut
     self.seq_item_queue: Queue[InputInterfaceType] = Queue()
+    start_soon(self.driver_loop())
 
   async def send(self, transaction: InputInterfaceType):
     await self.seq_item_queue.put(transaction)
 
   async def driver_loop(self):
     while True:
-
       input_stimulus = await self.seq_item_queue.get()
       await self.drive_transaction(input_stimulus)
       await RisingEdge(self.dut.clk)
-      
+  
+  async def busy(self):
+    return not self.seq_item_queue.empty()
 
   async def drive_transaction(self, input_stimulus: InputInterfaceType):
     for field in fields(input_stimulus):

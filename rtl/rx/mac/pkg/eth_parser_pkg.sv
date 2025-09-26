@@ -11,11 +11,11 @@ package eth_parser_pkg;
   parameter MIN_DATA_OR_CRC_LEN = MIN_DATA_LEN + CRC_LEN;
   parameter MAX_DATA_OR_CRC_LEN = MAX_DATA_LEN + CRC_LEN;
 
-  parameter PREAMBLE_COUNTER_W  = $clog(PREAMBLE_LEN);
-  parameter MAC_COUNTER_W       = $clog(MAC_LEN);
-  parameter ETHER_TYPE_W        = $clog(ETHER_TYPE_LEN);       
+  parameter PREAMBLE_COUNTER_W  = $clog2(PREAMBLE_LEN);
+  parameter MAC_COUNTER_W       = $clog2(MAC_LEN);
+  parameter ETHER_TYPE_W        = $clog2(ETHER_TYPE_LEN);       
 
-  parameter COUNTER_W           = $clog(MAX_DATA_OR_CRC_LEN);
+  parameter COUNTER_W           = $clog2(MAX_DATA_OR_CRC_LEN);
 
   parameter PREAMBLE_BYTE       = 8'hAA;
   parameter SFD_BYTE            = 8'hAB;
@@ -23,13 +23,13 @@ package eth_parser_pkg;
   parameter NUM_PARSER_STATE    = 7;  
 
   typedef enum logic[NUM_PARSER_STATE-1:0] {
-    IDLE              = NUM_PARSER_STATE'b0000001, 
-    PREAMBLE_PARSE    = NUM_PARSER_STATE'b0000010,
-    SFD_PARSE         = NUM_PARSER_STATE'b0000100, 
-    DEST_MAC_PARSE    = NUM_PARSER_STATE'b0001000,
-    SRC_MAC_PARSE     = NUM_PARSER_STATE'b0010000,
-    ETHER_TYPE_PARSE  = NUM_PARSER_STATE'b0100000,
-    DATA_OR_CRC_PARSE = NUM_PARSER_STATE'b1000000
+    IDLE              = 'b0000001, 
+    PREAMBLE_PARSE    = 'b0000010,
+    SFD_PARSE         = 'b0000100, 
+    DEST_MAC_PARSE    = 'b0001000,
+    SRC_MAC_PARSE     = 'b0010000,
+    ETHER_TYPE_PARSE  = 'b0100000,
+    DATA_OR_CRC_PARSE = 'b1000000
   } parser_state_t;
   
   typedef struct {
@@ -45,11 +45,11 @@ package eth_parser_pkg;
     logic incomplete;
   } error_fields_t;
 
-  automatic function logic preamble_error(logic [GMII_DATA_W-1:0] gmii_data);
+  function automatic logic preamble_error(logic [GMII_DATA_W-1:0] gmii_data);
     return gmii_data != PREAMBLE_BYTE;
   endfunction
 
-  automatic function logic sfd_error(logic [GMII_DATA_W-1:0] gmii_data);
+  function automatic logic sfd_error(logic [GMII_DATA_W-1:0] gmii_data);
     return gmii_data != SFD_BYTE;
   endfunction
 endpackage

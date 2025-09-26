@@ -1,9 +1,8 @@
 module crc_checker 
   import crc_pkg::*;
   import mac_if_pkg::*;
-  import eth_parser_if::*;
 #(
-  parameter int PARALLEL_CRC_POLY = PARALLEL_CRC_POLY_8BIT,
+  parameter int PARALLEL_CRC_POLY = PARALLEL_CRC_POLY_8BIT
 ) (
   input logic         clk,
   input logic         rst,

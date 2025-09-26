@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1758256766" />
+    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="24" name="sanity_test" ratio_time="28490.647617619295" sim_time_ns="2540.001" time="0.08915209770202637" />
+  </testsuite>
+</testsuites>
