@@ -1,0 +1,1 @@
+RTL_UTILS_PRIM_SRCS += $(wildcard rtl/utils/data_pipeline.sv)

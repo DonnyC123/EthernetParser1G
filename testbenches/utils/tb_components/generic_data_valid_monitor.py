@@ -1,8 +1,4 @@
-import cocotb
-from cocotb.triggers import RisingEdge, ReadOnly
-from cocotb.queue import Queue
-from dataclasses import fields
-from typing import Generic, TypeVar, Type
+from typing import TypeVar
 
 from utils.tb_components.generic_monitor import GenericMonitor
 
@@ -14,5 +10,4 @@ class GenericDataValidMonitor(GenericMonitor[OutputInterfaceType]):
     while True:
       output_transaction = await self.receive_transaction()
       if output_transaction.valid: 
-        print("adding data")
         await self.actual_queue.put(output_transaction)

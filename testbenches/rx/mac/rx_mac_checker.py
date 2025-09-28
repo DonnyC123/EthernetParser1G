@@ -1,18 +1,16 @@
 from cocotb.queue import Queue
-from testbenches.utils.packet_lib.ethernet_packet import EthernetPacket
-from testbenches.utils.packet_lib.ether_type import EtherType
+from utils.packet_lib.ethernet_packet import EthernetPacket
+from utils.packet_lib.ether_type import EtherType
+from utils.tb_components.generic_checker import GenericChecker
 
-class RxMacChecker():
-  def __init__(self, fatal=True):
-    self.fatal = fatal
-  
+class RxMacChecker(GenericChecker):
   
   def check_parser_flags(self, actual_out):
     if (1 < actual_out.is_preamble_or_sfd_o 
-          + actual_out.is_dst_mac_o 
-          + actual_out.is_src_mac_o 
-          + actual_out.is_ether_type_o 
-          + actual_out.is_payload_or_crc_o):
+      + actual_out.is_dst_mac_o 
+      + actual_out.is_src_mac_o 
+      + actual_out.is_ether_type_o 
+      + actual_out.is_payload_or_crc_o):
       
       msg = f"""Multiple sections in parser raised: "
         actual_out.is_preamble_or_sfd_o = {actual_out.is_preamble_or_sfd_o}
@@ -28,13 +26,16 @@ class RxMacChecker():
         
         
   def check_ethernet_packet(self, expected_packet, actual_packet):
-    print(actual_packet)
+    print(f"expected_packet{expected_packet}")
+    print(f"actual_packet{actual_packet}")
     if (expected_packet != actual_packet):
       msg = f"""Expected packet doesn't match actual packet: "
         Expected Ethernet Packet = {expected_packet}
         Actual Ethernet Packet = {actual_packet}"""
-      
+     
       if self.fatal:
+        print(actual_packet.crc)
+        print(expected_packet.crc)
         raise RuntimeError(msg)
       else:
         print(f"[ERROR] {msg}")
@@ -62,8 +63,11 @@ class RxMacChecker():
         payload += actual_out.rx_data_o.buff
       
       if (last_payload_or_crc and not actual_out.is_payload_or_crc_o):
-        actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload)
+        actual_crc = int.from_bytes(payload[-EthernetPacket.CRC_LEN:], 'big')
+        actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload[:-EthernetPacket.CRC_LEN], actual_crc)
+        
         expected_eth_packet = await expected_queue.get()
+
         self.check_ethernet_packet(expected_eth_packet, actual_eth_packet)
         
         dst_mac = bytes()
@@ -72,7 +76,8 @@ class RxMacChecker():
         payload = bytes()
       
       last_payload_or_crc = actual_out.is_payload_or_crc_o
-      
-    actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload)
+    
+    actual_crc = int.from_bytes(payload[-EthernetPacket.CRC_LEN:], 'big')
+    actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload[:-EthernetPacket.CRC_LEN], actual_crc)
     expected_eth_packet = await expected_queue.get()
     self.check_ethernet_packet(expected_eth_packet, actual_eth_packet)

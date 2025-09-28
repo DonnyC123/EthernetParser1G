@@ -31,14 +31,51 @@ async def sanity_test(dut):
   rx_mac_monitor = GenericDataValidMonitor[RxMacOutputInterface](dut=dut, output_interface=RxMacOutputInterface)
   rx_mac_scoreboard = GenericScoreboard(rx_mac_monitor, checker=RxMacChecker())
   
-  frame = EthernetPacket(
+  ethernet_packet = EthernetPacket(
     dst_mac="aabbccddeeff",
     src_mac="112233445566", 
     ethertype=EtherType.IPV4,
     payload=b"Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet!"
   )
 
-  await rx_mac_sequence.add_ethernet_frame(frame)
+  print("HERE")
+  rx_mac_sequence.add_subscriber(rx_mac_scoreboard.model)
+  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
+  print("HERE2")
+  
+  while await rx_mac_driver.busy():
+    await RisingEdge(dut.clk)
+  
+  print("HERE3")
+  await Timer(1000, units="ns")
+  sim_time_ns = get_sim_time(units="ns")
+  await rx_mac_scoreboard.check()
+  dut._log.info(f"Extended test completed at simulation time {sim_time_ns} ns")
+  
+  
+@cocotb.test()
+async def three_packets_test(dut):
+  await initialize_tb(dut, clk_period_ns=10)
+  
+  rx_mac_driver = GenericDdrValidDriver[RxMacInputInterface](dut=dut, input_interface=RxMacInputInterface)
+  rx_mac_sequence = RxMacSequence[RxMacInputInterface](driver=rx_mac_driver)
+  rx_mac_monitor = GenericDataValidMonitor[RxMacOutputInterface](dut=dut, output_interface=RxMacOutputInterface)
+  rx_mac_scoreboard = GenericScoreboard(rx_mac_monitor, checker=RxMacChecker())
+  
+  ethernet_packet = EthernetPacket(
+    dst_mac="aabbccddeeff",
+    src_mac="112233445566", 
+    ethertype=EtherType.IPV4,
+    payload=b"Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet!"
+  )
+
+  rx_mac_sequence.add_subscriber(rx_mac_scoreboard)
+  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
+  print("HERE")
+  
+  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
+  # frame.crc = 32
+  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
   
   while await rx_mac_driver.busy():
     await RisingEdge(dut.clk)
@@ -47,3 +84,4 @@ async def sanity_test(dut):
   sim_time_ns = get_sim_time(units="ns")
   await rx_mac_scoreboard.check()
   dut._log.info(f"Extended test completed at simulation time {sim_time_ns} ns")
+

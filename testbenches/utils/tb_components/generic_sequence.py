@@ -7,19 +7,16 @@ class GenericSequence(Generic[InputInterfaceType]):
     self.driver = driver
     self.transaction_subscribers = list(subscribers)
 
-  async def add_subscriber(self, *subscribers):
+  def add_subscriber(self, *subscribers):
     self.transaction_subscribers.extend(subscribers)
   
   async def add_transaction(self, transaction: InputInterfaceType):
-    self.done = True
     await self.notify_subscribers(transaction)
     await self.driver.send(transaction)
-    self.done = True
-    
-    
+
   async def notify_subscribers(self, transaction):
     for sub in self.transaction_subscribers:
       if hasattr(sub, 'notify'):
-        sub.notify(transaction)
+        await sub.notify(transaction)
       else:
           print(f"Warning: Don't know how to notify {sub}")

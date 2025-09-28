@@ -1,20 +1,12 @@
-import struct
-import zlib
-
-from testbenches.utils.packet_lib.ethernet_frame import EthernetFrame
-from testbenches.utils.packet_lib.ether_type import EtherType
+from utils.packet_lib.ethernet_frame import EthernetFrame
+from utils.packet_lib.ether_type import EtherType
 
 class EthernetPacket(EthernetFrame):
+  PREAMBLE_LEN = 7
+  SFD_LEN = 1
+  PREAMBLE_SFD_LEN = PREAMBLE_LEN + SFD_LEN
   
-  def __init__(self,
-    dst_mac: str = "000000000000", 
-    src_mac: str = "ffffffffffff",
-    ethertype: EtherType = EtherType.IPV4,
-    payload: bytes = b""
-    ):
-    super().__init__(dst_mac, src_mac, ethertype, payload)
-    
-  PREAMBLE = b'\xaa' * 7
+  PREAMBLE = b'\xaa' * PREAMBLE_LEN
   SFD = b'\xab'
   
   def pack(self, pad: bool = True) -> bytes:
@@ -24,7 +16,7 @@ class EthernetPacket(EthernetFrame):
   
   @classmethod
   def unpack(cls, data: bytes, verify_crc: bool = True) -> 'EthernetPacket':
-    frame = super().unpack(data[8:], verify_crc)
+    frame = super().unpack(data[cls.PREAMBLE_SFD_LEN:], verify_crc)
     
     packet = cls(
       dst_mac=frame.dst_mac,
@@ -34,4 +26,3 @@ class EthernetPacket(EthernetFrame):
     )
     packet.crc = frame.crc
     return packet
-    

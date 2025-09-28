@@ -6,12 +6,10 @@ RTL_RX_MAC_SRCS += $(RTL_UTILS_SRCS)
 
 RTL_RX_MAC_SRCS += $(RTL_UTILS_IF_SRCS)
 
-RTL_RX_MAC_SRCS += $(wildcard rtl/utils/XilinxUnisimLibrary/verilog/src/unisims/IDDR.v)
+RTL_RX_MAC_SRCS += $(wildcard rtl/utils/xilinx_primatives/IDDR.v)
 
 RTL_RX_MAC_SRCS += $(RTL_RX_MAC_PKG_SRCS)
 RTL_RX_MAC_SRCS += $(RTL_RX_MAC_IF_SRCS)
-
-
 
 RTL_RX_MAC_SRCS += $(wildcard rtl/rx/mac/invalidate_packet.sv)
 RTL_RX_MAC_SRCS += $(wildcard rtl/rx/mac/iddr_sim.sv)

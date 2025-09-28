@@ -1,5 +1,5 @@
-from testbenches.utils.packet_lib.ethernet_packet import EthernetPacket
-from testbenches.utils.packet_lib.ether_type import EtherType
+from utils.packet_lib.ethernet_packet import EthernetPacket
+from utils.packet_lib.ether_type import EtherType
 
 if __name__ == "__main__":
   frame = EthernetPacket(

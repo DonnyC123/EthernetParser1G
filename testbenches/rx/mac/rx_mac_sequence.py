@@ -14,16 +14,8 @@ class RxMacSequence(GenericSequence[InputInterfaceType]):
   def __init__(self, driver, *subscribers):
     super().__init__(driver)
     self.ethernet_frame_subscribers = list(subscribers)
-          
-  async def add_subscriber(self, *subscribers):
-    self.ethernet_frame_subscribers.extend(subscribers)
-    
-  async def notify_subscribers(self, ethernet_frame):
-    for sub in self.ethernet_frame_subscribers:
-      if hasattr(sub, 'notify'):
-        sub.notify(ethernet_frame)
-  
-  async def add_ethernet_frame(self, ethernet_frame : EthernetFrame, additional_frame_gap : int = 0):
+            
+  async def add_ethernet_packet(self, ethernet_frame : EthernetFrame, additional_frame_gap : int = 0):
     await self.notify_subscribers(ethernet_frame)
     for byte in ethernet_frame.pack():
       rising_data = ((byte >> 4) & 0xF)
@@ -41,3 +33,6 @@ class RxMacSequence(GenericSequence[InputInterfaceType]):
         RxMacInputInterface.with_valid(rgmii_rx_data_i=random.randint(0, 15), valid=0),
         RxMacInputInterface.with_error(rgmii_rx_data_i=random.randint(0, 15), error=random.randint(0, 1))
       ))
+      
+  async def add_transaction(self, transaction: InputInterfaceType):
+    await self.driver.send(transaction)

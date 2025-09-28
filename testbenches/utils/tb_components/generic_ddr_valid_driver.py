@@ -28,8 +28,6 @@ class GenericDdrValidDriver(GenericDriver[InputInterfaceType]):
     while True:
       if (not self.seq_item_queue.empty()):
         rising_stimulus, falling_stimulus = await self.seq_item_queue.get()
-        print("rising_stimulus", rising_stimulus)
-        print("falling_stimulus", falling_stimulus)
         await self.drive_transaction(rising_stimulus)
         await RisingEdge(self.dut.clk)
         

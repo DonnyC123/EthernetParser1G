@@ -1,21 +1,29 @@
 import struct
 import zlib
 
-from testbenches.utils.packet_lib.ether_type import EtherType
+from utils.packet_lib.ether_type import EtherType
 
 class EthernetFrame:
+  SCR_MAC_LEN = 6
+  DST_MAC_LEN = 6
+  ETH_TYPE_LEN = 2
+  CRC_LEN = 4
+  
+  MIN_LEN = 46
+  
   def __init__(self,
-    src_mac: str = "ffffffffffff",
-    dst_mac: str = "000000000000", 
+    dst_mac: str = "000000000000",
+    src_mac: str = "ffffffffffff", 
     ethertype: EtherType = EtherType.IPV4,
     payload: bytes = b"",  
-    ):
+    crc: int = 0 
+  ):
     
     self.dst_mac = self._parse_mac(dst_mac)
     self.src_mac = self._parse_mac(src_mac)
     self.ethertype = ethertype 
     self.payload = payload
-    self.crc = 0
+    self.crc = crc
     
   def _parse_mac(self, mac_str: str) -> bytes:
     if isinstance(mac_str, bytes) and len(mac_str) == 6:
@@ -60,8 +68,8 @@ class EthernetFrame:
   
   def pack(self, pad: bool = True) -> bytes:
     payload = self.payload
-    if pad and len(payload) < 46:
-      payload = payload + b'\x00' * (46 - len(payload))
+    if pad and len(payload) < self.MIN_LEN:
+      payload = payload + b'\x00' * (self.MIN_LEN - len(payload))
     
     frame_without_crc = self.dst_mac + self.src_mac + struct.pack("!H", self.ethertype) + payload
     self.crc = zlib.crc32(frame_without_crc) & 0xffffffff
@@ -70,15 +78,15 @@ class EthernetFrame:
     return frame
   
   @classmethod
-  def unpack(cls, data: bytes, verify_crc: bool = True) -> 'EthernetFrame':
-    dst_mac = data[0:6]
-    src_mac = data[6:12] 
-    ethertype = struct.unpack("!H", data[12:14])[0]
+  def unpack(cls, data: bytes) -> 'EthernetFrame':
+    dst_mac = data[0:cls.DST_MAC_LEN]
+    src_mac = data[cls.DST_MAC_LEN :+ cls.DST_MAC_LEN] 
+    ethertype = struct.unpack("!H", data[cls.DST_MAC_LEN + cls.DST_MAC_LEN :+ cls.ETH_TYPE_LEN])[0]
     
-    payload = data[14:-4]
-    received_crc = struct.unpack("!I", data[-4:])[0]
+    payload = data[cls.DST_MAC_LEN + cls.DST_MAC_LEN + cls.ETH_TYPE_LEN :cls.CRC_LEN]
+    received_crc = struct.unpack("!I", data[-cls.CRC_LEN:])[0]
     
-    frame_without_fcs = data[:-4]
+    frame_without_fcs = data[:-cls.CRC_LEN]
     calculated_crc = zlib.crc32(frame_without_fcs) & 0xffffffff
     
     if received_crc != calculated_crc:
@@ -100,3 +108,12 @@ class EthernetFrame:
   
   def __repr__(self) -> str:
     return f"EthernetFrame(dst='{self.dst_mac_str}', src='{self.src_mac_str}', type=0x{self.ethertype:04x})"
+
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+        return NotImplemented
+
+    return (self.dst_mac == other.dst_mac and
+            self.src_mac == other.src_mac and
+            self.ethertype == other.ethertype and
+            self.payload == other.payload)

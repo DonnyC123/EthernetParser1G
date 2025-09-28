@@ -7,8 +7,9 @@ class GenericScoreboard():
     self.model = model
     self.checker = checker
     
-  def notify(self, notification):
-    self.model.notify(notification)
+  async def notify(self, notification):
+    await self.model.notify(notification)
+    print(f"In score{notification}")
   
   async def check(self):
     await self.checker.check(self.model.expected_queue, self.monitor.actual_queue)
