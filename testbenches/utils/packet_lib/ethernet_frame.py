@@ -16,7 +16,7 @@ class EthernetFrame:
     src_mac: str = "ffffffffffff", 
     ethertype: EtherType = EtherType.IPV4,
     payload: bytes = b"",  
-    crc: int = 0 
+    crc: int = None 
   ):
     
     self.dst_mac = self._parse_mac(dst_mac)
@@ -72,9 +72,11 @@ class EthernetFrame:
       payload = payload + b'\x00' * (self.MIN_LEN - len(payload))
     
     frame_without_crc = self.dst_mac + self.src_mac + struct.pack("!H", self.ethertype) + payload
-    self.crc = zlib.crc32(frame_without_crc) & 0xffffffff
+
+    if self.crc is None:
+      self.crc = zlib.crc32(frame_without_crc)
     
-    frame = frame_without_crc + struct.pack("!I", self.crc)
+    frame = frame_without_crc + struct.pack("<I", self.crc)
     return frame
   
   @classmethod

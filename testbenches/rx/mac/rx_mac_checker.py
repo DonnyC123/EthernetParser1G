@@ -26,8 +26,7 @@ class RxMacChecker(GenericChecker):
         
         
   def check_ethernet_packet(self, expected_packet, actual_packet):
-    print(f"expected_packet{expected_packet}")
-    print(f"actual_packet{actual_packet}")
+
     if (expected_packet != actual_packet):
       msg = f"""Expected packet doesn't match actual packet: "
         Expected Ethernet Packet = {expected_packet}

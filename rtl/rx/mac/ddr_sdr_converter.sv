@@ -23,8 +23,8 @@ module ddr_sdr_converter
         .D            (rgmii_if_rx_i.data[data_idx]),
         .R            (rst),
         .S            (1'b0),
-        .Q1           (gmii_if_rx_o.data[data_idx + RGMII_DATA_W]),
-        .Q2           (gmii_if_rx_o.data[data_idx])
+        .Q1           (gmii_if_rx_o.data[data_idx]),
+        .Q2           (gmii_if_rx_o.data[data_idx+ RGMII_DATA_W])
       );
     end
       

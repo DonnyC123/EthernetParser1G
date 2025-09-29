@@ -19,4 +19,4 @@ class GenericSequence(Generic[InputInterfaceType]):
       if hasattr(sub, 'notify'):
         await sub.notify(transaction)
       else:
-          print(f"Warning: Don't know how to notify {sub}")
+        print(f"Warning: Don't know how to notify {sub}")

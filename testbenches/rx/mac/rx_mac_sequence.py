@@ -18,8 +18,9 @@ class RxMacSequence(GenericSequence[InputInterfaceType]):
   async def add_ethernet_packet(self, ethernet_frame : EthernetFrame, additional_frame_gap : int = 0):
     await self.notify_subscribers(ethernet_frame)
     for byte in ethernet_frame.pack():
-      rising_data = ((byte >> 4) & 0xF)
-      falling_data = byte & 0xF
+      rising_data = byte & 0xF
+      falling_data = ((byte >> 4) & 0xF)
+      
       
       await self.add_transaction((
         RxMacInputInterface.with_valid(rgmii_rx_data_i=rising_data, valid=1),

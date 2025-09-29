@@ -1,7 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1758861460" />
-    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="24" name="sanity_test" ratio_time="24153.078221617652" sim_time_ns="2540.001" time="0.1051626205444336" />
-    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="56" name="three_packets_test" ratio_time="24883.94180133253" sim_time_ns="5560.001" time="0.22343730926513672" />
+    <property name="random_seed" value="1759180863" />
+    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="24" name="sanity_test" ratio_time="21849.374175647576" sim_time_ns="2540.001" time="0.11625051498413086" />
+    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="53" name="three_packets_test" ratio_time="23974.89153758149" sim_time_ns="5380.001" time="0.22440147399902344" />
   </testsuite>
 </testsuites>

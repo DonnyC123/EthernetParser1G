@@ -1,8 +1,8 @@
 module data_pipeline # (
-  parameter int DATA_W      = 32,
-  parameter int PIPE_DEPTH  = 2,
-  parameter bit RESET_EN    = 1,
-  parameter int RESET_VALUE = 0
+  parameter DATA_W      = 32,
+  parameter PIPE_DEPTH  = 1,
+  parameter RESET_EN    = 1,
+  parameter RESET_VALUE = 0
 ) (
   input  logic clk,
   input  logic rst,

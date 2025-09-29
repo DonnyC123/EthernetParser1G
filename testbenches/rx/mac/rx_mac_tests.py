@@ -38,15 +38,12 @@ async def sanity_test(dut):
     payload=b"Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet!"
   )
 
-  print("HERE")
   rx_mac_sequence.add_subscriber(rx_mac_scoreboard.model)
   await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
-  print("HERE2")
   
   while await rx_mac_driver.busy():
     await RisingEdge(dut.clk)
   
-  print("HERE3")
   await Timer(1000, units="ns")
   sim_time_ns = get_sim_time(units="ns")
   await rx_mac_scoreboard.check()
@@ -68,13 +65,23 @@ async def three_packets_test(dut):
     ethertype=EtherType.IPV4,
     payload=b"Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet!"
   )
-
+  
+  ethernet_packet2 = EthernetPacket(
+    dst_mac="aabbccddeeff",
+    src_mac="112233445566", 
+    ethertype=EtherType.IPV4,
+    payload=b"Hello Ethernet! Goodbye Ethernet! Hello Ethernet! Goodbye Ethernet! Hello Ethernet!"
+  )
+    
   rx_mac_sequence.add_subscriber(rx_mac_scoreboard)
   await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
-  print("HERE")
   
-  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
-  # frame.crc = 32
+  await rx_mac_sequence.add_ethernet_packet(ethernet_packet2)
+  
+  print(ethernet_packet.pack()[-4:])
+  ethernet_packet.crc = 33
+  
+  print(ethernet_packet.pack()[-4:])
   await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
   
   while await rx_mac_driver.busy():
