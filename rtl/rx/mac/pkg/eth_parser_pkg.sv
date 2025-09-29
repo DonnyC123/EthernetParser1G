@@ -31,14 +31,6 @@ package eth_parser_pkg;
     ETHER_TYPE_PARSE  = 'b0100000,
     DATA_OR_CRC_PARSE = 'b1000000
   } parser_state_t;
-  
-  typedef struct {
-    logic is_preamble_or_sfd;
-    logic is_dst_mac;
-    logic is_src_mac;
-    logic is_ether_type;
-    logic is_payload_or_crc;
-  } eth_fields_t;
 
   typedef struct packed{
     logic preamble_sfd;

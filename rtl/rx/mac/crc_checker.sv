@@ -2,11 +2,11 @@ module crc_checker
   import crc_pkg::*;
   import mac_if_pkg::*;
 (
-  input   logic         clk,
-  input   logic         rst,
-  input   gmii_if.slave gmii_rx_if_i,
-  input   eth_parser_if eth_parser_if_i,
-  output  logic         crc_error_o
+  input   logic               clk,
+  input   logic               rst,
+  input   gmii_if.slave       gmii_rx_if_i,
+  input   eth_fields_if.slave eth_fields_if_i,
+  output  logic               crc_error_o
 );
 
   crc_checker_state_t crc_checker_state_b;
@@ -48,7 +48,7 @@ module crc_checker
       IDLE: begin
         crc_shift_reg_b       = CRC_REG_INITIAL_VALUE; 
         
-        if (gmii_rx_if_i.valid && gmii_rx_valid_ff && !eth_parser_if_i.eth_fields.is_preamble_or_sfd) begin
+        if (gmii_rx_if_i.valid && gmii_rx_valid_ff && !eth_fields_if_i.is_preamble_or_sfd) begin
           crc_checker_state_b = ACTIVE;
           crc_shift_reg_b     = new_crc_val;
         end

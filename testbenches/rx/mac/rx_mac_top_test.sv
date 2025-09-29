@@ -16,7 +16,7 @@ module rx_mac_top_test
 );
 
   rgmii_if      rgmii_if_internal();
-  eth_parser_if eth_parser_rx_if ();
+  eth_fields_if eth_fields_rx_if ();
 
   data_valid_if  #( 
     .DATA_W(GMII_DATA_W)
@@ -30,7 +30,7 @@ module rx_mac_top_test
     .rst                  (rst),
     .rgmii_if_rx_i        (rgmii_if_internal.slave),
     .rx_data_valid_if_o   (rx_data_valid_if.slave),
-    .eth_parser_rx_if_o   (eth_parser_rx_if.slave),
+    .eth_fields_rx_if_o   (eth_fields_rx_if.slave),
     .invalid_frame_o      (invalid_frame_o)
   );
 
@@ -38,10 +38,10 @@ module rx_mac_top_test
     rx_data_o             = rx_data_valid_if.data;
     rx_data_valid_o       = rx_data_valid_if.valid;
 
-    is_preamble_or_sfd_o  = eth_parser_rx_if.eth_fields.is_preamble_or_sfd;         
-    is_dst_mac_o          = eth_parser_rx_if.eth_fields.is_dst_mac; 
-    is_src_mac_o          = eth_parser_rx_if.eth_fields.is_src_mac; 
-    is_ether_type_o       = eth_parser_rx_if.eth_fields.is_ether_type;   
-    is_payload_or_crc_o   = eth_parser_rx_if.eth_fields.is_payload_or_crc;
+    is_preamble_or_sfd_o  = eth_fields_rx_if.is_preamble_or_sfd;         
+    is_dst_mac_o          = eth_fields_rx_if.is_dst_mac; 
+    is_src_mac_o          = eth_fields_rx_if.is_src_mac; 
+    is_ether_type_o       = eth_fields_rx_if.is_ether_type;   
+    is_payload_or_crc_o   = eth_fields_rx_if.is_payload_or_crc;
   end
 endmodule

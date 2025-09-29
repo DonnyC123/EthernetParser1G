@@ -1,11 +1,11 @@
 
 module invalidate_packet (
-  input logic                clk,
-  input logic                rst,
-  input logic                crc_error_i,
-  input gmii_if.slave        gmii_rx_if_i,
-  input eth_parser_if.slave  eth_parser_if_i,
-  output logic               error_pulse_o
+  input logic                       clk,
+  input logic                       rst,
+  input logic                       crc_error_i,
+  input gmii_if.slave               gmii_rx_if_i,
+  input eth_parser_error_if.slave   eth_parser_error_if_i,
+  output logic                      error_pulse_o
 );
   import error_pulse_pkg::*;
 
@@ -20,7 +20,8 @@ module invalidate_packet (
 
     error         = crc_error_i 
                   || gmii_rx_if_i.valid && gmii_rx_if_i.error
-                  || (|eth_parser_if_i.error_fields);
+                  || eth_parser_error_if_i.preamble_sfd
+                  || eth_parser_error_if_i.incomplete;
         
     unique case (error_state_ff) 
       NO_ERROR: begin
