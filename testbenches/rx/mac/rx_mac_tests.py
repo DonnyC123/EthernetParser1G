@@ -89,4 +89,3 @@ async def three_packets_test(dut):
   sim_time_ns = get_sim_time(units="ns")
   await rx_mac_scoreboard.check()
   dut._log.info(f"Extended test completed at simulation time {sim_time_ns} ns")
-
