@@ -1,7 +1,7 @@
 module data_status_pipeline # (
   parameter int DATA_W      = 32,
   parameter int STATUS_W    = 1,
-  parameter int PIPE_DEPTH  = 2
+  parameter int PIPE_DEPTH  = 1
 ) (
   input  logic clk,
   input  logic rst,

@@ -9,16 +9,14 @@ module calculate_new_crc
 );
 
   logic [CRC_W-1:0] new_crc_val;
-  logic [CRC_W-1:0] new_crc_val_lfsh;
   logic             xor_crc;
 
   always_comb begin
     new_crc_val       = crc_old_i;
-    new_crc_val_lfsh  = new_crc_val << 1;
     
     for (int i = 0; i < DATA_W; i++) begin
       xor_crc         = new_crc_val[CRC_W-1] ^ data_i[i];
-      new_crc_val     = xor_crc ? (new_crc_val_lfsh ^ CRC_POLY) : new_crc_val_lfsh;
+      new_crc_val     = xor_crc ? ((new_crc_val << 1) ^ CRC_POLY) : (new_crc_val << 1);
     end
   end
 

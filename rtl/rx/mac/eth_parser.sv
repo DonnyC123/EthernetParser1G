@@ -99,7 +99,7 @@ module eth_parser
     eth_fields_if_o.is_src_mac         = parser_state_ff == SRC_MAC_PARSE;
     eth_fields_if_o.is_dst_mac         = parser_state_ff == DEST_MAC_PARSE;
     eth_fields_if_o.is_ether_type      = parser_state_ff == ETHER_TYPE_PARSE;
-    eth_fields_if_o.is_payload_or_crc  = parser_state_ff == DATA_OR_CRC_PARSE;
+    eth_fields_if_o.is_payload_or_crc  = parser_state_ff == DATA_OR_CRC_PARSE && gmii_if_rx_i.valid;
   end  
   
   always_ff @(posedge clk) begin

@@ -78,9 +78,9 @@ async def three_packets_test(dut):
   
   await rx_mac_sequence.add_ethernet_packet(ethernet_packet2)
   
-  ethernet_packet.crc = 33
+  ethernet_packet.crc = 69
   
-  await rx_mac_sequence.add_ethernet_packet(ethernet_packet)
+  await rx_mac_sequence.add_ethernet_corrupted_packet(ethernet_packet)
   
   while await rx_mac_driver.busy():
     await RisingEdge(dut.clk)

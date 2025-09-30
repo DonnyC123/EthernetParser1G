@@ -34,14 +34,40 @@ module rx_mac_top_test
     .invalid_frame_o      (invalid_frame_o)
   );
 
-  always_comb begin
-    rx_data_o             = rx_data_valid_if.data;
-    rx_data_valid_o       = rx_data_valid_if.valid;
+  data_status_pipeline # (
+    .DATA_W     (GMII_DATA_W),
+    .STATUS_W   (1),
+    .PIPE_DEPTH (1)
+  ) data_status_pipeline_inst (
+    .clk        (clk),
+    .rst        (rst),
+    .data_i     (rx_data_valid_if.data),
+    .status_i   (rx_data_valid_if.valid),
+    .data_o     (rx_data_o),
+    .status_o   (rx_data_valid_o)
+  );
 
-    is_preamble_or_sfd_o  = eth_fields_rx_if.is_preamble_or_sfd;         
-    is_dst_mac_o          = eth_fields_rx_if.is_dst_mac; 
-    is_src_mac_o          = eth_fields_rx_if.is_src_mac; 
-    is_ether_type_o       = eth_fields_rx_if.is_ether_type;   
-    is_payload_or_crc_o   = eth_fields_rx_if.is_payload_or_crc;
-  end
+  data_pipeline # (
+    .DATA_W     (5),
+    .PIPE_DEPTH (1),
+    .RESET_EN   (0)
+  ) data_pipeline_inst (
+    .clk        (clk),
+    .rst        (rst),
+    .data_i     ({
+                  eth_fields_rx_if.is_preamble_or_sfd, 
+                  eth_fields_rx_if.is_dst_mac, 
+                  eth_fields_rx_if.is_src_mac, 
+                  eth_fields_rx_if.is_ether_type, 
+                  eth_fields_rx_if.is_payload_or_crc
+                }),
+    .data_o     ({
+                  is_preamble_or_sfd_o,
+                  is_dst_mac_o,
+                  is_src_mac_o,
+                  is_ether_type_o,
+                  is_payload_or_crc_o
+                })
+  );
+
 endmodule
