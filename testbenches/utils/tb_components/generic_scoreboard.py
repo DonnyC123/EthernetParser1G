@@ -4,8 +4,8 @@ from utils.tb_components.generic_checker import GenericChecker
 class GenericScoreboard():
   def __init__(self, monitor, model=GenericModel(), checker=GenericChecker()):
     self.monitor = monitor
-    self.model = model
-    self.checker = checker
+    self.model = model()
+    self.checker = checker()
     
   async def notify(self, notification):
     await self.model.notify(notification)

@@ -5,7 +5,6 @@ class GenericModel():
     self.expected_queue = Queue()
 
   async def notify(self, notification):
-    
     await self.process_notification(notification)
 
   async def process_notification(self, notification):
