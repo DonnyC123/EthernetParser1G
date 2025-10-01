@@ -50,7 +50,7 @@ module rx_mac_top_test
   data_pipeline # (
     .DATA_W     (5),
     .PIPE_DEPTH (1),
-    .RESET_EN   (0)
+    .RST_EN   (0)
   ) data_pipeline_inst (
     .clk        (clk),
     .rst        (rst),
@@ -59,7 +59,7 @@ module rx_mac_top_test
                   eth_fields_rx_if.is_dst_mac, 
                   eth_fields_rx_if.is_src_mac, 
                   eth_fields_rx_if.is_ether_type, 
-                  eth_fields_rx_if.is_payload_or_crc
+                  eth_fields_rx_if.is_payload_or_fcs
                 }),
     .data_o     ({
                   is_preamble_or_sfd_o,

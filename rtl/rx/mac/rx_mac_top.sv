@@ -12,7 +12,7 @@ module rx_mac_top
   gmii_if             gmii_rx_if ();  
   eth_parser_error_if eth_parser_error_rx_if();
 
-  logic         crc_error;
+  logic         fcs_error;
 
   ddr_sdr_converter ddr_sdr_converter_inst (
     .clk            (clk),
@@ -29,18 +29,18 @@ module rx_mac_top
     .eth_parser_error_if_o  (eth_parser_error_rx_if.master)
   );
 
-  crc_checker crc_checker_inst (
+  fcs_checker fcs_checker_inst (
     .clk              (clk),
     .rst              (rst),
     .gmii_rx_if_i     (gmii_rx_if.slave),
     .eth_fields_if_i  (eth_fields_rx_if_o.slave),
-    .crc_error_o      (crc_error)
+    .fcs_error_o      (fcs_error)
   );
 
   invalidate_packet invalidate_packet_inst (
     .clk                    (clk),
     .rst                    (rst),
-    .crc_error_i            (crc_error),
+    .fcs_error_i            (fcs_error),
     .gmii_rx_if_i           (gmii_rx_if.slave),
     .eth_parser_error_if_i  (eth_parser_error_rx_if.slave),
     .error_pulse_o          (invalid_frame_o)

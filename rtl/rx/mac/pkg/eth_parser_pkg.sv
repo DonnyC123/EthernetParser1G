@@ -1,21 +1,21 @@
 package eth_parser_pkg;
   import mac_if_pkg::GMII_DATA_W;
 
-  parameter PREAMBLE_LEN        = 7;  
-  parameter SFD_LEN             = 1;
-  parameter MAC_LEN             = 6;
-  parameter ETHER_TYPE_LEN      = 2;
-  parameter MIN_DATA_LEN        = 46;
-  parameter MAX_DATA_LEN        = 1500;
-  parameter CRC_LEN             = 4;
-  parameter MIN_DATA_OR_CRC_LEN = MIN_DATA_LEN + CRC_LEN;
-  parameter MAX_DATA_OR_CRC_LEN = MAX_DATA_LEN + CRC_LEN;
+  parameter PREAMBLE_BYTES        = 7;  
+  parameter SFD_BYTES             = 1;
+  parameter MAC_BYTES             = 6;
+  parameter ETHER_TYPE_BYTES      = 2;
+  parameter MIN_DATA_BYTES        = 46;
+  parameter MAX_DATA_BYTES        = 1500;
+  parameter fcs_BYTES             = 4;
+  parameter MIN_DATA_OR_fcs_BYTES = MIN_DATA_BYTES + fcs_BYTES;
+  parameter MAX_DATA_OR_fcs_BYTES = MAX_DATA_BYTES + fcs_BYTES;
 
-  parameter PREAMBLE_COUNTER_W  = $clog2(PREAMBLE_LEN);
-  parameter MAC_COUNTER_W       = $clog2(MAC_LEN);
-  parameter ETHER_TYPE_W        = $clog2(ETHER_TYPE_LEN);       
+  parameter PREAMBLE_COUNTER_W  = $clog2(PREAMBLE_BYTES);
+  parameter MAC_COUNTER_W       = $clog2(MAC_BYTES);
+  parameter ETHER_TYPE_W        = $clog2(ETHER_TYPE_BYTES);       
 
-  parameter COUNTER_W           = $clog2(MAX_DATA_OR_CRC_LEN);
+  parameter COUNTER_W           = $clog2(MAX_DATA_OR_fcs_BYTES);
 
   parameter PREAMBLE_BYTE       = 8'hAA;
   parameter SFD_BYTE            = 8'hAB;
@@ -29,7 +29,7 @@ package eth_parser_pkg;
     DEST_MAC_PARSE    = 'b0001000,
     SRC_MAC_PARSE     = 'b0010000,
     ETHER_TYPE_PARSE  = 'b0100000,
-    DATA_OR_CRC_PARSE = 'b1000000
+    DATA_OR_fcs_PARSE = 'b1000000
   } parser_state_t;
 
   typedef struct packed{

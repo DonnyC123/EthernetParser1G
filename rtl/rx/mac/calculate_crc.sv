@@ -1,7 +1,7 @@
-module calculate_new_crc
-  import crc_pkg::*;
-#(
-  parameter DATA_W = 8
+module calculate_crc #(
+  parameter DATA_W    = 8,
+  parameter CRC_W     = 32,
+  parameter CRC_POLY  = 32'h04C11DB7
 ) (
   input   logic [CRC_W-1:0]   crc_old_i,
   input   logic [DATA_W-1:0]  data_i,

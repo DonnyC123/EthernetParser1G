@@ -4,14 +4,14 @@ interface eth_fields_if ();
   logic is_dst_mac;
   logic is_src_mac;
   logic is_ether_type;
-  logic is_payload_or_crc;
+  logic is_payload_or_fcs;
 
   modport slave (
     input is_preamble_or_sfd,
     input is_dst_mac,
     input is_src_mac,
     input is_ether_type,
-    input is_payload_or_crc
+    input is_payload_or_fcs
   );
 
   modport master (
@@ -19,7 +19,7 @@ interface eth_fields_if ();
     output is_dst_mac,
     output is_src_mac,
     output is_ether_type,
-    output is_payload_or_crc
+    output is_payload_or_fcs
   );
 
 endinterface
