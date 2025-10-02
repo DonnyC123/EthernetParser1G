@@ -1,7 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1759269330" />
-    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="24" name="sanity_test" ratio_time="27192.16399294515" sim_time_ns="2540.001" time="0.09340929985046387" />
-    <testcase classname="testbenches.rx.mac.rx_mac_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/rx/mac/rx_mac_tests.py" lineno="53" name="three_packets_test" ratio_time="28388.242453369297" sim_time_ns="5380.001" time="0.1895151138305664" />
+    <property name="random_seed" value="1759380328" />
+    <testcase name="sanity_test" classname="testbenches.hash_controller.hash_controller_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/hash_controller/hash_controller_tests.py" lineno="20" time="0.0009877681732177734" sim_time_ns="30.0" ratio_time="30371.498913830557" />
   </testsuite>
 </testsuites>

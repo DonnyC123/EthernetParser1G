@@ -9,14 +9,12 @@ module xor_reduction #(
   logic [DOUT_W-1:0] curr_xor;
 
   always_comb begin
-    for (int i = 0; i < DIN_W; i += DOUT_W) begin
-      if (i + DOUT_W <= DIN_W) begin
-        curr_xor  = data_i[i +: DOUT_W];
-      end else begin
-        curr_xor  = data_i[DIN_W-1 : i];
+    data_o          = '0;
+    for(int j = 0; j < DIN_W/DOUT_W; j++) begin
+      for (int i = 0; i < DOUT_W; i ++) begin
+        curr_xor[i] = data_i[(i * j) % DIN_W];
       end
-
-      data_o      = data_o ^ curr_xor;
+      data_o        = data_o ^ curr_xor;
     end
   end
   

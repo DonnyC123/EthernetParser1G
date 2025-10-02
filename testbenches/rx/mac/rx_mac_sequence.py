@@ -1,19 +1,15 @@
 import random
-from typing import TypeVar
 
 from utils.tb_components.generic_sequence import GenericSequence
 from utils.packet_lib.ethernet_frame import EthernetFrame
 
 from rx.mac.rx_mac_input_interface import RxMacInputInterface
 
-InputInterfaceType = TypeVar("InputInterfaceType")
-
-class RxMacSequence(GenericSequence[InputInterfaceType]):
+class RxMacSequence(GenericSequence[RxMacInputInterface]):
   MIN_FRAME_GAP = 96//4
   
   def __init__(self, driver, *subscribers):
-    super().__init__(driver)
-    self.ethernet_frame_subscribers = list(subscribers)
+    super().__init__(driver, subscribers)
   
   async def add_ethernet_corrupted_packet(self, ethernet_frame : EthernetFrame, additional_frame_gap : int = 0):
     await self.create_ethernet_driver_transactions(ethernet_frame, additional_frame_gap)
@@ -33,7 +29,7 @@ class RxMacSequence(GenericSequence[InputInterfaceType]):
       ))
     await self.add_frame_gap(self.MIN_FRAME_GAP + additional_frame_gap)
     
-  async def add_transaction(self, transaction: InputInterfaceType):
+  async def add_transaction(self, transaction: RxMacInputInterface):
     await self.driver.send(transaction)
     
   async def add_frame_gap(self, packet_gap: int):

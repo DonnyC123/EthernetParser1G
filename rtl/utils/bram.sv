@@ -8,12 +8,12 @@ module bram #(
   input   logic [DATA_W-1:0]  wr_data_i,
   input   logic [ADDR_W-1:0]  wr_addr_i,
   input   logic [ADDR_W-1:0]  rd_addr_i,
-  output  logic               rd_data_o 
+  output  logic [DATA_W-1:0]  rd_data_o 
 );
 
   localparam BRAM_DEPTH = 2 ** ADDR_W;
   
-  logic [DATA_W-1:0] memory [BRAM_DEPTH-1:0];
+  logic [DATA_W-1:0] memory [BRAM_DEPTH];
 
   initial begin
     for (int i = 0; i < BRAM_DEPTH; i++) begin

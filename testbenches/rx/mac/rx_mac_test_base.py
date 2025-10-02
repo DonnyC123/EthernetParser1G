@@ -17,12 +17,12 @@ class RxMacTestBase(GenericTestBase):
     super().__init__(
       dut=dut,
       driver=GenericDdrValidDriver,
-      input_interface=RxMacInputInterface, 
-      sequence=RxMacSequence, 
-      monitor=GenericDataValidMonitor, 
-      output_interface=RxMacOutputInterface, 
+      input_interface=RxMacInputInterface,
+      sequence=RxMacSequence,
+      monitor=GenericDataValidMonitor,
+      output_interface=RxMacOutputInterface,
       scoreboard=GenericScoreboard,
-      checker=RxMacChecker  
+      checker=RxMacChecker
     )
     
     self.sequence.add_subscriber(self.scoreboard)

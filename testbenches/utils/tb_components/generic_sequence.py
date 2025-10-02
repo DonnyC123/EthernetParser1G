@@ -5,7 +5,7 @@ InputInterfaceType = TypeVar("InputInterfaceType")
 class GenericSequence(Generic[InputInterfaceType]):
   def __init__(self, driver, *subscribers):
     self.driver = driver
-    self.transaction_subscribers = list(subscribers)
+    self.transaction_subscribers = self.transaction_subscribers = [s for s in subscribers if hasattr(s, 'notify')]
 
   def add_subscriber(self, *subscribers):
     self.transaction_subscribers.extend(subscribers)

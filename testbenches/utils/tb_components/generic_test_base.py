@@ -9,15 +9,16 @@ from utils.tb_components.generic_checker import GenericChecker
 from utils.tb_components.generic_data_valid_interface import GenericDataValidInterface
 
 class GenericTestBase():
-  def __init__ (self, dut, 
-                      driver=GenericDriver,
-                      input_interface=GenericDataValidInterface, 
-                      sequence=GenericSequence, 
-                      monitor=GenericMonitor, 
-                      output_interface=GenericDataValidInterface, 
-                      scoreboard=GenericScoreboard,
-                      model=GenericModel,
-                      checker=GenericChecker
+  def __init__ (self, 
+    dut, 
+    driver=GenericDriver,
+    input_interface=GenericDataValidInterface, 
+    sequence=GenericSequence, 
+    monitor=GenericMonitor, 
+    output_interface=GenericDataValidInterface, 
+    scoreboard=GenericScoreboard,
+    model=GenericModel,
+    checker=GenericChecker
   ):
     self.dut = dut
     self.driver = driver(dut=dut, input_interface=input_interface)

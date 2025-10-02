@@ -1,0 +1,1 @@
+RTL_SHARED_SRCS += $(wildcard rtl/shared_modules/calculate_crc.sv)

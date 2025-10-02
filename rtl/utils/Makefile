@@ -1,2 +1,5 @@
 RTL_UTILS_SRCS += $(wildcard rtl/utils/data_pipeline.sv)
 RTL_UTILS_SRCS += $(wildcard rtl/utils/data_status_pipeline.sv)
+RTL_UTILS_SRCS += $(wildcard rtl/utils/shift_reg.sv)
+RTL_UTILS_SRCS += $(wildcard rtl/utils/data_status_shift_reg.sv)
+RTL_UTILS_SRCS += $(wildcard rtl/utils/bram.sv)

@@ -60,7 +60,6 @@ class RxMacChecker(GenericChecker):
     last_payload_or_crc = False
     invalidate_packet = False
     
-    print("Expected Q: ", expected_queue.qsize())
     while(not actual_queue.empty()):
       actual_out = await actual_queue.get() 
       self.check_parser_flags(actual_out)
@@ -76,10 +75,7 @@ class RxMacChecker(GenericChecker):
         
       invalidate_packet = invalidate_packet or actual_out.invalid_frame_o
       
-      if (actual_out.invalid_frame_o):
-        print("Invalid!!!")
       if (last_payload_or_crc and not actual_out.is_payload_or_crc_o):
-        print("invalidate_packet", invalidate_packet)
         if (not invalidate_packet): 
           actual_crc = int.from_bytes(payload[-EthernetPacket.CRC_LEN:], 'big')
           actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload[:-EthernetPacket.CRC_LEN], actual_crc)
@@ -96,8 +92,7 @@ class RxMacChecker(GenericChecker):
     
     actual_crc = int.from_bytes(payload[-EthernetPacket.CRC_LEN:], 'big')
     actual_eth_packet = EthernetPacket(dst_mac, src_mac, EtherType.from_bytes(eth_type), payload[:-EthernetPacket.CRC_LEN], actual_crc)
-    print(actual_out)
-    print("invalidate_packet", invalidate_packet)
+    
     if (not invalidate_packet): 
       await self.get_and_check_eth_packets(expected_queue, actual_eth_packet)
     await self.check_remaining(expected_queue, queue_name="Expected Queue")

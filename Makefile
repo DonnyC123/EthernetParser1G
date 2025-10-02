@@ -1,3 +1,5 @@
+PYTHON := python3.9
+
 PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 SIM = verilator

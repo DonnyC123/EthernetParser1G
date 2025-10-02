@@ -3,10 +3,10 @@ class GenericChecker():
     self.fatal = fatal
     
   def check_len(self, expected_queue, actual_queue):
-    if len(expected_queue) != len(actual_queue):
+    if expected_queue.qsize() != actual_queue.qsize():
       msg = (f"Mismatch in queue lengths: "
-        f"model={len(expected_queue)}, "
-        f"monitor={len(actual_queue)}")
+        f"model={expected_queue.qsize()}, "
+        f"monitor={actual_queue.qsize()}")
       if self.fatal:
         raise RuntimeError(msg)
       else:
