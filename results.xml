@@ -1,6 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1759380328" />
-    <testcase name="sanity_test" classname="testbenches.hash_controller.hash_controller_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/hash_controller/hash_controller_tests.py" lineno="20" time="0.0009877681732177734" sim_time_ns="30.0" ratio_time="30371.498913830557" />
+    <property name="random_seed" value="1759457588" />
+    <testcase name="sanity_test" classname="testbenches.hash_controller.hash_controller_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/hash_controller/hash_controller_tests.py" lineno="38" time="0.006777524948120117" sim_time_ns="1190.0" ratio_time="175580.3201181975" />
+    <testcase name="stress_test" classname="testbenches.hash_controller.hash_controller_tests" file="/home/dcc3637/FpgaProjects/PacketParserGenysys2/testbenches/hash_controller/hash_controller_tests.py" lineno="51" time="2.712104558944702" sim_time_ns="321030.0" ratio_time="118369.33017247495" />
   </testsuite>
 </testsuites>

@@ -11,7 +11,7 @@ from rx.mac.rx_mac_output_interface import RxMacOutputInterface
 from rx.mac.rx_mac_sequence import RxMacSequence
 from rx.mac.rx_mac_checker import RxMacChecker
 
-
+# Can just use generic Base in the future
 class RxMacTestBase(GenericTestBase):
   def __init__ (self, dut):
     super().__init__(
@@ -25,12 +25,5 @@ class RxMacTestBase(GenericTestBase):
       checker=RxMacChecker
     )
     
-    self.sequence.add_subscriber(self.scoreboard)
+    # self.sequence.add_subscriber(self.scoreboard)
     
-    
-  async def wait_for_driver_done(self):
-    while await self.driver.busy():
-      await RisingEdge(self.dut.clk)
-    
-    await Timer(1000, units="ns")
-  

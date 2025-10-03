@@ -12,4 +12,6 @@ class GenericScoreboard():
   
   async def check(self):
     await self.checker.check(self.model.expected_queue, self.monitor.actual_queue)
-    
+  
+  async def check_with_error_tol(self, error_tol):
+    await self.checker.check_with_error_tol(self.model.expected_queue, self.monitor.actual_queue, error_tol)

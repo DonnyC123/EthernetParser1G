@@ -11,12 +11,14 @@ module hash_controller_ip #(
 
   import hash_table_pkg::*;
 
-  parameter PIPE_DEPTH      = 2;
-  parameter KEY_W           = 12;
-  parameter NUM_HASH_TABLES = 4;
+  parameter PIPE_DEPTH        = 2;
+  parameter INSERT_PATH_LEN   = 3;
+  parameter KEY_W             = 12;
+  parameter NUM_HASH_TABLES   = 4;
 
   genvar                      hash_idx;
-  
+  logic                       en_search;
+  logic                       ip_addr_found_valid;
   logic [KEY_W-1:0]           ip_addr_reduced;
   logic [KEY_W-1:0]           ip_addr_hash_calc           [NUM_HASH_TABLES];
   logic [KEY_W-1:0]           ip_addr_hash_calc_shift_reg [NUM_HASH_TABLES] [PIPE_DEPTH]; 
@@ -28,8 +30,20 @@ module hash_controller_ip #(
   logic                       insert_val_shift_reg                          [PIPE_DEPTH];
 
   hash_query_t                hash_query;
+
   logic [IP_ADDR_W-1:0]       hash_ip_val;
-  logic [IP_ADDR_W-1:0]       ip_addr_ff;
+  logic [IP_ADDR_W-1:0]       ip_addr_shift_reg                             [PIPE_DEPTH]; 
+
+  shift_reg #(
+    .DATA_W       (IP_ADDR_W),
+    .PIPE_DEPTH   (PIPE_DEPTH),
+    .RST_EN       (0)
+  ) ip_addr_shift_reg_inst (
+    .clk          (clk),
+    .rst          (rst),
+    .data_i       (ip_addr_i),
+    .data_o       (ip_addr_shift_reg)
+  );
 
   xor_reduction #(
     .DIN_W    (IP_ADDR_W),
@@ -39,8 +53,8 @@ module hash_controller_ip #(
     .data_o   (ip_addr_reduced)
   );
   
-  generate
-    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin
+  generate 
+    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin : calc_crc_val_gen
       calculate_crc #(
         .DATA_W     (KEY_W),
         .CRC_W      (KEY_W),
@@ -53,8 +67,8 @@ module hash_controller_ip #(
     end
   endgenerate
 
-  generate
-    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin
+  generate 
+    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin : insert_shift_reg_gen
       data_status_shift_reg #(
         .DATA_W       (KEY_W),
         .STATUS_W     (1),
@@ -78,46 +92,23 @@ module hash_controller_ip #(
   end
 
   generate
-    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin
+    for (hash_idx = 0; hash_idx < NUM_HASH_TABLES; hash_idx++) begin : hash_table_gen
       hash_table #(
-        .KEY_W          (KEY_W),
-        .VAL_W          (IP_ADDR_W)
+        .KEY_W              (KEY_W),
+        .VAL_W              (IP_ADDR_W)
       ) hash_table_inst (
-        .clk            (clk),
-        .rst            (rst),
-        .wr_en_i        (wr_en_hash_table[hash_idx]),
-        .hash_query_i   (hash_query),
-        .hash_wr_key_i  (ip_addr_hash_calc_shift_reg[hash_idx][1]),
-        .hash_rd_key_i  (ip_addr_hash_calc_shift_reg[hash_idx][0]),
-        .hash_val_i     (ip_addr_i),
-        .resp_o         (hash_hit[hash_idx])
+        .clk                (clk),
+        .rst                (rst),
+        .wr_en_i            (wr_en_hash_table[hash_idx]),
+        .hash_query_i       (hash_query),
+        .hash_wr_key_i      (ip_addr_hash_calc_shift_reg[hash_idx][1]),
+        .hash_rd_key_i      (ip_addr_hash_calc_shift_reg[hash_idx][0]),
+        .hash_insert_val_i  (ip_addr_shift_reg[1]),
+        .hash_lookup_val_i  (ip_addr_shift_reg[0]),
+        .resp_o             (hash_hit[hash_idx])
       );
     end
   endgenerate
-
-  data_pipeline #(
-    .DATA_W       (NUM_HASH_TABLES),
-    .PIPE_DEPTH   (1),
-    .RST_EN       (1),
-    .RST_VAL      (0)
-  ) hash_hit_pipeline_inst (
-    .clk          (clk),
-    .rst          (rst),
-    .data_i       (hash_hit),
-    .data_o       (hash_hit_ff)
-  );
-
-  always_comb begin
-
-    logic enable_search;
-    enable_search = insert_val_shift_reg[PIPE_DEPTH-1];
-
-    for (int i = 0; i < NUM_HASH_TABLES; i++) begin
-      wr_en_hash_table[i] = enable_search && !hash_hit_ff[i];
-
-      enable_search = enable_search && hash_hit_ff[i];
-    end
-end
 
   data_pipeline #(
     .DATA_W       (1),
@@ -131,6 +122,28 @@ end
     .data_o       (ip_addr_found_if_o.valid)
   );
 
-  assign ip_addr_found_if_o.data = |hash_hit_ff;
+  // data_pipeline #(
+  //   .DATA_W       (NUM_HASH_TABLES + 1),
+  //   .PIPE_DEPTH   (0),
+  //   .RST_EN       (1),
+  //   .RST_VAL      (0)
+  // ) hash_hit_pipeline_inst (
+  //   .clk          (clk),
+  //   .rst          (rst),
+  //   .data_i       ({hash_hit, ip_addr_found_valid}),
+  //   .data_o       ({hash_hit_ff, ip_addr_found_if_o.valid})
+  // );
+
+  always_comb begin
+    en_search = insert_val_shift_reg[PIPE_DEPTH-1];
+
+    for (int i = 0; i < NUM_HASH_TABLES; i++) begin
+      wr_en_hash_table[i] = en_search && hash_hit[i];
+
+      en_search = en_search && !hash_hit[i];
+    end
+end
+
+  assign ip_addr_found_if_o.data = |hash_hit;
   
 endmodule

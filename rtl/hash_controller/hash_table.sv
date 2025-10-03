@@ -4,15 +4,14 @@ module hash_table
   parameter KEY_W = 12,
   parameter VAL_W = 32
 ) (
-  
-
   input   logic               clk,
   input   logic               rst,
   input   logic               wr_en_i,
   input   hash_query_t        hash_query_i,
   input   logic [KEY_W-1:0]   hash_wr_key_i,
   input   logic [KEY_W-1:0]   hash_rd_key_i,
-  input   logic [VAL_W-1:0]   hash_val_i,
+  input   logic [VAL_W-1:0]   hash_insert_val_i,
+  input   logic [VAL_W-1:0]   hash_lookup_val_i,
   output  logic               resp_o
 );
 
@@ -27,7 +26,7 @@ module hash_table
     .clk        (clk),
     .rst        (rst),
     .wr_en_i    (wr_en_i),
-    .wr_data_i  (hash_val_i),
+    .wr_data_i  (hash_insert_val_i),
     .wr_addr_i  (hash_wr_key_i),
     .rd_addr_i  (hash_rd_key_i),
     .rd_data_o  (hash_val_table) 
@@ -41,7 +40,7 @@ module hash_table
   ) hash_wr_expected_pipeline (
     .clk        (clk),
     .rst        (rst),
-    .data_i     ({hash_query_i, hash_val_i}),
+    .data_i     ({hash_query_i, hash_lookup_val_i}),
     .data_o     ({hash_query_ff, hash_val_expected_ff})
   );
 

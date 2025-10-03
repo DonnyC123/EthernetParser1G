@@ -10,9 +10,7 @@ class HashControlSequence(GenericSequence[HashControllerInputInterface]):
   def __init__(self, driver, *subscribers):
     super().__init__(driver, subscribers)
     
-  async def insert_val(self, val:  Union[int, bytes]):
-    if not isinstance(val, bytes): 
-      val = val.to_bytes(4, byteorder='big')
+  async def insert_val(self, val: int):
       
     await self.notify_subscribers([HashTransactionTypes.INSERT, val])
     await self.add_transaction(
@@ -23,30 +21,28 @@ class HashControlSequence(GenericSequence[HashControllerInputInterface]):
       )
     )
 
-    await self.sendRandomValidTransaction(3, len(val))
+    await self.send_random_invalid_transaction(3)
   
-  async def look_up_val(self, val : Union[int, bytes]):
-    if not isinstance(val, bytes): 
-      val = val.to_bytes(4, byteorder='big')
+  async def look_up_val(self, val : int):
       
     await self.notify_subscribers([HashTransactionTypes.LOOKUP, val])
     await self.add_transaction(
       HashControllerInputInterface(
-        insert_val_i = True, 
-        look_up_val_i = False, 
+        insert_val_i = False, 
+        look_up_val_i = True, 
         ip_addr_i = val
       )
     )
-    await self.sendRandomValidTransaction(3, len(val))
+    await self.send_random_invalid_transaction(3)
   
   
-  async def sendRandomValidTransaction(self, count, ip_addr_len):
+  async def send_random_invalid_transaction(self, count):
     for _ in range(count):
       await self.add_transaction(
       HashControllerInputInterface(
         insert_val_i = False,
         look_up_val_i = False,
-        ip_addr_i = random.randbytes(ip_addr_len)
+        ip_addr_i = random.randint(0, 2**32-1)
       )
     )
       

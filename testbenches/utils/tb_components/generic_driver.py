@@ -27,7 +27,6 @@ class GenericDriver(Generic[InputInterfaceType]):
   async def drive_transaction(self, input_stimulus: InputInterfaceType):
     for field in fields(input_stimulus):
       value = getattr(input_stimulus, field.name)
-
       if hasattr(self.dut, field.name):
         getattr(self.dut, field.name).value = value
       else:

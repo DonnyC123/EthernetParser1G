@@ -1,4 +1,4 @@
-from utils.tb_common import initialize_tb
+from cocotb.triggers import Timer, RisingEdge
 
 from utils.tb_components.generic_driver import GenericDriver
 from utils.tb_components.generic_sequence import GenericSequence
@@ -21,10 +21,18 @@ class GenericTestBase():
     checker=GenericChecker
   ):
     self.dut = dut
-    self.driver = driver(dut=dut, input_interface=input_interface)
+    self.driver = driver[input_interface](dut=dut)
     self.sequence = sequence(driver=self.driver)
     self.monitor = monitor(dut=dut, output_interface=output_interface)
-    self.scoreboard =  scoreboard(monitor=self.monitor, model=model, checker=checker)
+    self.scoreboard = scoreboard(monitor=self.monitor, model=model(), checker=checker())
+    self.sequence.add_subscriber(self.scoreboard)
+    
+  async def wait_for_driver_done(self):
+    while await self.driver.busy():
+      await RisingEdge(self.dut.clk)
+    
+    await Timer(1000, unit="ns")
+  
   
   
   

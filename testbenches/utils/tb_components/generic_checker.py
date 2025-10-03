@@ -26,6 +26,29 @@ class GenericChecker():
         else:
           print(f"[WARNING] {msg}")
   
+  async def check_output_error_tol(self, expected_queue, actual_queue, error_tol):
+    num_results = min(actual_queue.qsize(), expected_queue.qsize())
+    num_error = 0
+    while (not expected_queue.empty()) and (not actual_queue.empty()):
+      monitor_out = await actual_queue.get()
+      model_out = await expected_queue.get()
+      if monitor_out != model_out:
+        num_error += 1
+        
+    error = num_error/num_results
+    if (error > error_tol):
+      msg = (f"Error rate {error} "
+        f"not within error tolerance of {error_tol}")
+      if self.fatal:
+        raise RuntimeError(msg)
+      else:
+        print(f"[WARNING] {msg}")
+    else: 
+      msg = (f"Error rate {error} "
+        f"within error tolerance of {error_tol}")
+      print(msg)
+          
+    
   async def check_remaining(self, output_queue, queue_name=""):
     while (not output_queue.empty()):
       output = await output_queue.get()
@@ -39,6 +62,13 @@ class GenericChecker():
   async def check(self, expected_queue, actual_queue):
     self.check_len(expected_queue, actual_queue)
     await self.check_output(expected_queue, actual_queue)
+    await self.check_remaining(expected_queue, "expected")
+    await self.check_remaining(actual_queue, "actual")
+    
+    
+  async def check_with_error_tol(self, expected_queue, actual_queue, error_tol):
+    self.check_len(expected_queue, actual_queue)
+    await self.check_output_error_tol(expected_queue, actual_queue, error_tol)
     await self.check_remaining(expected_queue, "expected")
     await self.check_remaining(actual_queue, "actual")
       

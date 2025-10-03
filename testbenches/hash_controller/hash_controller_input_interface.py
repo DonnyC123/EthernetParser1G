@@ -4,4 +4,4 @@ from dataclasses import dataclass
 class HashControllerInputInterface:
   insert_val_i: bool = False
   look_up_val_i: bool = False
-  ip_addr_i: bytearray = bytearray(4)
+  ip_addr_i: int = 0
