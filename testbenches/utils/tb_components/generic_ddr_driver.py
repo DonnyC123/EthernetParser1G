@@ -9,11 +9,7 @@ from utils.tb_components.generic_driver import GenericDriver
 InputInterfaceType = TypeVar("InputInterfaceType")
 
 class GenericDdrDriver(GenericDriver[InputInterfaceType]):
-  def __init__(self, dut):
-    self.dut = dut
-    self.seq_item_queue: Queue[InputInterfaceType] = Queue()
-    start_soon(self.driver_loop())
-    
+
   async def driver_loop(self):
     while True:
       rising_stimulus, falling_stimulus = await self.seq_item_queue.get()

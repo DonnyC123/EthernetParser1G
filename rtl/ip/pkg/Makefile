@@ -1,0 +1,1 @@
+RTL_IP_PKG_SRCS += $(wildcard rtl/ip/pkg/ipv4_pkg.sv)

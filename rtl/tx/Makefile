@@ -1,0 +1,1 @@
+RTL_TX += $(wildcard rtl/tx/tx_buffer_controller.sv)

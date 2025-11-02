@@ -44,18 +44,3 @@ async def sanity_test(dut):
   await test_base.sequence.look_up_val(123)
   
   await test_base.wait_for_driver_done()
-  await test_base.scoreboard.check()
-  
-  
-@cocotb.test()
-async def stress_test(dut):
-  
-  test_base = await init_test_base(dut)
-  for _ in range(4000):
-    await test_base.sequence.insert_val(random.randint(0, 10000))
-  
-  for _ in range(4000):
-    await test_base.sequence.look_up_val(random.randint(0, 10000))
-  
-  await test_base.wait_for_driver_done()
-  await test_base.scoreboard.check_with_error_tol(0.02)

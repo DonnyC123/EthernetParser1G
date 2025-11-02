@@ -12,11 +12,6 @@ InputInterfaceType = TypeVar("InputInterfaceType")
 
 class GenericDdrValidDriver(GenericDriver[InputInterfaceType]):    
   
-  def __init__(self, dut, input_interface : InputInterfaceType):
-    super().__init__(dut) 
-    self.input_interface = input_interface
-    
-  
   def generate_random_stimulus(self):
     random_stimulus = self.input_interface()
     for field in fields(random_stimulus):

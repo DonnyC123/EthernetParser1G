@@ -7,8 +7,10 @@ from typing import Generic, TypeVar
 InputInterfaceType = TypeVar("InputInterfaceType")
 
 class GenericDriver(Generic[InputInterfaceType]):
-  def __init__(self, dut):
+  def __init__(self, dut, input_interface : InputInterfaceType):
     self.dut = dut
+    self.input_interface = input_interface
+    
     self.seq_item_queue: Queue[InputInterfaceType] = Queue()
     start_soon(self.driver_loop())
 

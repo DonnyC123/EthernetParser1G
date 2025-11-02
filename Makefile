@@ -8,7 +8,7 @@ VERILATOR_FLAGS += --build-dep-bin
 
 # Require TEST_PATH to be explicitly set - no default
 ifndef TEST_PATH
-$(error TEST_PATH must be defined. Example: make TEST_PATH=testbenches/rx/mac/Makefile)
+$(error TEST_PATH must be defined. Example: make TEST_PATH=testbenches/mac/Makefile)
 endif
 
 include $(TEST_PATH)

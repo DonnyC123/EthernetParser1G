@@ -14,9 +14,9 @@ module hash_controller_tb #(
     .DATA_W(1)
   ) ip_addr_found_if();
 
-  hash_controller_ip #(
+  ip_hash_controller #(
     .IP_ADDR_W          (IP_ADDR_W)
-  ) hash_controller_ip_inst (
+  ) ip_hash_controller_inst (
     .clk                (clk),
     .rst                (rst),
     .insert_val_i       (insert_val_i),

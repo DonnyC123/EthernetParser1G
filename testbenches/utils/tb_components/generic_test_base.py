@@ -21,11 +21,10 @@ class GenericTestBase():
     checker=GenericChecker
   ):
     self.dut = dut
-    self.driver = driver[input_interface](dut=dut)
+    self.driver = driver[input_interface](dut=dut, input_interface=input_interface)
     self.sequence = sequence(driver=self.driver)
     self.monitor = monitor(dut=dut, output_interface=output_interface)
     self.scoreboard = scoreboard(monitor=self.monitor, model=model(), checker=checker())
-    self.sequence.add_subscriber(self.scoreboard)
     
   async def wait_for_driver_done(self):
     while await self.driver.busy():

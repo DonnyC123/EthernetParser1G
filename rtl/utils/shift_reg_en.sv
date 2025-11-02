@@ -7,6 +7,7 @@ module shift_reg #(
 ) (
   input  logic                clk,
   input  logic                rst,
+  input  logic                shift_en,      
   input  logic  [DATA_W-1:0]  data_i,
   output logic  [DATA_W-1:0]  data_o [PIPE_DEPTH]
 );
@@ -18,9 +19,12 @@ module shift_reg #(
     if (PIPE_DEPTH >= 1) begin
 
       always_comb begin
-        data_shift_reg_b[0] = data_i;
-        for (int i = 1; i < PIPE_DEPTH; i++) begin
-          data_shift_reg_b[i]  = data_shift_reg_ff[i-1];
+        data_shift_reg_b = data_shift_reg_ff;
+        if (shift_en) begin
+          data_shift_reg_b[0] = data_i;
+          for (int i = 1; i < PIPE_DEPTH; i++) begin
+            data_shift_reg_b[i]  = data_shift_reg_ff[i-1];
+          end
         end
       end
 

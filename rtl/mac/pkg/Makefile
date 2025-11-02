@@ -1,0 +1,5 @@
+RTL_RX_MAC_PKG_SRCS += $(wildcard rtl/mac/pkg/fcs_pkg.sv)
+RTL_RX_MAC_PKG_SRCS += $(wildcard rtl/mac/pkg/ddr_sdr_converter_pkg.sv)
+RTL_RX_MAC_PKG_SRCS += $(wildcard rtl/mac/pkg/mac_if_pkg.sv)
+RTL_RX_MAC_PKG_SRCS += $(wildcard rtl/mac/pkg/error_pulse_pkg.sv)
+RTL_RX_MAC_PKG_SRCS += $(wildcard rtl/mac/pkg/eth_parser_pkg.sv)
